@@ -1,0 +1,206 @@
+/* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  background: linear-gradient(to bottom right, #e0e0e0, #ffffff);
+  color: #333333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Page Header Styling */
+.page-header {
+  background-color: #004b87;  /* Blue Background for Header, matching logo */
+  color: white;
+  padding: 20px 30px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+}
+
+.facility-name {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-left: 20px;  /* Space from the edge */
+}
+
+.facility-name h1 {
+  font-size: 32px;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: white;
+}
+
+.facility-name p {
+  font-size: 20px;
+  margin: 0;
+  color: white;
+  text-transform: capitalize;  /* Sentence case */
+}
+
+.facility-logo img {
+  width: 70px;
+  height: auto;
+}
+
+/* App Container for the Form (Centered on the Page) */
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1024px;
+  margin: auto;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #444444;
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+/* Form field styling */
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #555555;
+}
+
+.form-field input,
+.form-field select,
+button {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #bdbdbd;
+  font-size: 16px;
+  outline: none;
+  background: #f7f7f7;
+  color: #333333;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  border-color: #616161;
+  box-shadow: 0 0 4px rgba(33, 33, 33, 0.3);
+}
+
+button {
+  background: #616161;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.5s ease;
+}
+
+button:hover {
+  background: #424242;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Footer styling */
+footer {
+  margin-top: auto;
+  background: #333333;
+  color: #ffffff;
+  text-align: center;
+  padding: 12px 0;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .app-container {
+    max-width: 85%;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  button {
+    font-size: 15px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    margin: 15px;
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    margin: 10px;
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  button {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .facility-name h1 {
+    font-size: 24px;
+  }
+
+  .facility-name p {
+    font-size: 16px;
+  }
+
+  .facility-logo img {
+    width: 40px;
+  }
+}
