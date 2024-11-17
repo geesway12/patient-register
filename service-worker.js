@@ -1,25 +1,25 @@
-const cacheName = "patient-register-cache-v1";
-const assets = [
-  "/",
-  "/index.html",
-  "/style.css",
-  "/main.js",
-  "/icons/icon-192x192.png",
-  "/icons/icon-512x512.png",
-];
-
-self.addEventListener("install", (e) => {
-  e.waitUntil(
-    caches.open(cacheName).then((cache) => {
-      return cache.addAll(assets);
+// Cache files and assets for offline use
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open('patient-register-cache').then((cache) => {
+      return cache.addAll([
+        '/',
+        '/index.html',
+        '/style.css',
+        '/main.js',
+        '/manifest.json',
+        '/assets/logo.png',
+        // Add any other assets your app needs
+      ]);
     })
   );
 });
 
-self.addEventListener("fetch", (e) => {
-  e.respondWith(
-    caches.match(e.request).then((response) => {
-      return response || fetch(e.request);
+// Fetch and serve cached assets when offline
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      return cachedResponse || fetch(event.request);
     })
   );
 });
