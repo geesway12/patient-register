@@ -27,14 +27,14 @@ body {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
 
 .facility-name {
   display: flex;
   flex-direction: column;
   text-align: left;
-  margin-left: 20px;  /* Space from the edge */
+  margin-left: 25px;  /* Space from the edge */
 }
 
 .facility-name h1 {
@@ -52,7 +52,7 @@ body {
 }
 
 .facility-logo img {
-  width: 70px;
+  width: 80px;
   height: auto;
 }
 
@@ -61,11 +61,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 1024px;
-  margin: auto;
-  padding: 15px;
+  max-width: 100%; /* Ensuring it adapts to the full width */
+  margin: 0 auto;  /* Auto margins to center */
+  padding: 20px;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   flex-direction: column;
   gap: 20px;
@@ -76,13 +76,14 @@ body {
 form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
+  width: 100%; /* Ensure form takes full width of its container */
 }
 
 h1 {
   text-align: center;
   color: #444444;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   font-size: 28px;
 }
 
@@ -108,6 +109,7 @@ button {
   outline: none;
   background: #f7f7f7;
   color: #333333;
+  width: 100%; /* Ensure form elements take full width */
 }
 
 .form-field input:focus,
@@ -145,9 +147,9 @@ footer {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 1080px) {
   .app-container {
-    max-width: 85%;
+    max-width: 90%;
     padding: 20px;
   }
 
@@ -163,7 +165,7 @@ footer {
 
 @media (max-width: 768px) {
   .app-container {
-    margin: 15px;
+    max-width: 100%;
     padding: 15px;
   }
 
@@ -179,6 +181,7 @@ footer {
 
 @media (max-width: 480px) {
   .app-container {
+    max-width: 100%;
     margin: 10px;
     padding: 12px;
   }

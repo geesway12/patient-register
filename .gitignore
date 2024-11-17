@@ -1,0 +1,15 @@
+# Ignore .DS_Store files
+.DS_Store
+
+# Ignore node_modules directory (for Node.js projects)
+node_modules/
+
+# Ignore build directories (for projects using build tools like Webpack)
+build/
+dist/
+
+# Ignore IDE-specific files (e.g., VSCode settings)
+.vscode/
+
+# Ignore environment files
+.env
