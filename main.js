@@ -42,9 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     request.onsuccess = () => {
       console.log('Patient data saved to IndexedDB');
       alert("Patient saved successfully!");
-      patientForm.reset();
-      insuranceFields.classList.add("hidden");
-      registrationNumber.value = "";
+      resetForm(); // Reset form after saving
     };
 
     request.onerror = (event) => {
@@ -201,6 +199,14 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     };
   });
+
+  // Reset form for new data entry after save
+  function resetForm() {
+    patientForm.reset();
+    insuranceFields.classList.add("hidden");
+    registrationNumber.value = "";
+    toggleInsuranceFields(); // Reapply the default toggle
+  }
 
   // Update footer year
   document.getElementById("current-year").textContent = new Date().getFullYear();
