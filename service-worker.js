@@ -3,13 +3,13 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open('patient-register-cache').then((cache) => {
       return cache.addAll([
-        '/',
-        '/index.html',
-        '/style.css',
-        '/main.js',
-        '/manifest.json',
-        '/icons/icon-192x192.png',
-        '/icons/icon-512x512.png'
+        '/patient-register/',
+        '/patient-register/index.html',
+        '/patient-register/style.css',
+        '/patient-register/main.js',
+        '/patient-register/manifest.json',
+        '/patient-register/icons/icon-192x192.png',
+        '/patient-register/icons/icon-512x512.png'
       ]);
     })
   );
