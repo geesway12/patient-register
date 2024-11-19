@@ -35,7 +35,7 @@
       </div>
 
       <!-- Personal Information Block -->
-      <div class="form-block">
+      <div class="form-block blue-block">
         <h3>Personal Information</h3>
         <div class="form-field">
           <label for="surname">Surname</label>
@@ -56,9 +56,28 @@
         <div class="form-field">
           <label for="sex">Sex</label>
           <select id="sex" required>
+            <option value="" disabled selected>Select Sex</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
+        </div>
+        <div class="form-field">
+          <label for="marital-status">Marital Status</label>
+          <select id="marital-status" required>
+            <option value="" disabled selected>Select Marital Status</option>
+            <option value="single">Single</option>
+            <option value="married">Married</option>
+            <option value="divorced">Divorced</option>
+            <option value="widowed">Widowed</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="occupation">Occupation</label>
+          <input type="text" id="occupation" placeholder="Enter occupation">
+        </div>
+        <div class="form-field">
+          <label for="religion">Religion</label>
+          <input type="text" id="religion" placeholder="Enter religion">
         </div>
       </div>
 
@@ -71,21 +90,22 @@
         </div>
         <div class="form-field">
           <label for="relative-address">Nearest Relative Address</label>
-          <input type="text" id="relative-address">
+          <input type="text" id="relative-address" placeholder="Enter nearest relative's address">
         </div>
       </div>
 
       <!-- Insurance Information Block -->
-      <div class="form-block">
+      <div class="form-block hidden" id="insurance-block">
         <h3>Insurance Information</h3>
         <div class="form-field">
           <label for="insurance-status">Insurance Status</label>
           <select id="insurance-status" required>
+            <option value="" disabled selected>Select Insurance Status</option>
             <option value="non-insured">Non-insured</option>
             <option value="insured">Insured</option>
           </select>
         </div>
-        <div id="insurance-fields" class="insurance-block hidden">
+        <div id="insurance-fields" class="insurance-block">
           <div class="form-field">
             <label for="insurance-name">Insurance Name</label>
             <input type="text" id="insurance-name">
@@ -129,9 +149,23 @@
           console.error('Service Worker registration failed:', error);
         });
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const insuranceStatus = document.getElementById("insurance-status");
+      const insuranceBlock = document.getElementById("insurance-block");
+
+      insuranceStatus.addEventListener("change", () => {
+        if (insuranceStatus.value === "insured") {
+          insuranceBlock.classList.remove("hidden");
+        } else {
+          insuranceBlock.classList.add("hidden");
+        }
+      });
+    });
   </script>
 
   <!-- Main JavaScript -->
   <script src="main.js"></script>
 </body>
 </html>
+
