@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dobInput = document.getElementById("dob");
   const ageInput = document.getElementById("age");
   const patientForm = document.getElementById("patient-form");
+  const exportCsvButton = document.getElementById("export-csv");
 
   // Open or create an IndexedDB database
   const dbPromise = indexedDB.open('patient-register-db', 1);
