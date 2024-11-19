@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const dbPromise = indexedDB.open('patient-register-db', 1);
+
+  // DOM Elements
   const dateOfRegistration = document.getElementById("date-of-registration");
   const registrationNumber = document.getElementById("registration-number");
   const insuranceStatus = document.getElementById("insurance-status");
@@ -8,60 +11,49 @@ document.addEventListener("DOMContentLoaded", () => {
   const patientForm = document.getElementById("patient-form");
   const exportCsvButton = document.getElementById("export-csv");
 
-  // Open or create an IndexedDB database
-  const dbPromise = indexedDB.open('patient-register-db', 1);
-
+  // Open or Create IndexedDB
   dbPromise.onsuccess = (event) => {
-    const db = event.target.result;
-    console.log('Database opened successfully!');
+    console.log("IndexedDB opened successfully");
   };
 
   dbPromise.onerror = (event) => {
-    console.error('Error opening database:', event.target.error);
+    console.error("IndexedDB error:", event.target.error);
   };
 
   dbPromise.onupgradeneeded = (event) => {
     const db = event.target.result;
-
-    // Create an object store to hold patient data
-    const objectStore = db.createObjectStore('patients', {
-      keyPath: 'registrationNumber', // Use the registration number as the unique identifier
-    });
-
-    objectStore.createIndex('registrationNumber', 'registrationNumber', { unique: true });
-
-    console.log('Database and object store created successfully!');
+    if (!db.objectStoreNames.contains('patients')) {
+      const objectStore = db.createObjectStore('patients', { keyPath: 'registrationNumber' });
+      objectStore.createIndex('registrationNumber', 'registrationNumber', { unique: true });
+    }
+    console.log("Database initialized");
   };
 
-  // Save patient data to the IndexedDB database
-  function savePatientData(db, patient) {
+  // Save Patient Data
+  const savePatientData = (db, patient) => {
     const transaction = db.transaction(['patients'], 'readwrite');
     const objectStore = transaction.objectStore('patients');
-    const request = objectStore.add(patient);  // This saves the patient data to IndexedDB
 
+    const request = objectStore.add(patient);
     request.onsuccess = () => {
-      console.log('Patient data saved to IndexedDB');
-      alert("Patient saved successfully!");
-      resetForm(); // Reset form after saving
+      alert("Patient data saved successfully!");
+      resetForm();
     };
-
     request.onerror = (event) => {
-      console.error('Error saving patient data:', event.target.error);
+      alert("Error saving patient data: " + event.target.error);
     };
-  }
+  };
 
-  // Generate Registration Number dynamically
+  // Update Registration Number
   const updateRegistrationNumber = () => {
     const serialNumber = prompt("Enter Serial Number (max 6 digits):");
     if (!serialNumber || !/^\d{1,6}$/.test(serialNumber)) {
-      alert("Invalid Serial Number. Please enter up to 6 digits.");
+      alert("Invalid Serial Number. Enter up to 6 digits.");
       return;
     }
     const yearPart = new Date(dateOfRegistration.value).getFullYear().toString().slice(-2);
     registrationNumber.value = `${serialNumber}-${yearPart}`;
   };
-
-  dateOfRegistration.addEventListener("change", updateRegistrationNumber);
 
   // Auto-calculate Age
   dobInput.addEventListener("change", () => {
@@ -74,43 +66,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Show/Hide Insurance Fields based on initial value of Insurance Status
+  // Toggle Insurance Fields
   const toggleInsuranceFields = () => {
-    if (insuranceStatus.value === "insured") {
-      insuranceFields.classList.remove("hidden");
-      document.getElementById("insurance-name").required = true;
-      document.getElementById("sub-district").required = true;
-      document.getElementById("insurance-no").required = true;
-      document.getElementById("insurance-id").required = true;
-    } else {
-      // Hide the insurance fields completely if non-insured
-      insuranceFields.classList.add("hidden");
-      document.getElementById("insurance-name").required = false;
-      document.getElementById("sub-district").required = false;
-      document.getElementById("insurance-no").required = false;
-      document.getElementById("insurance-id").required = false;
-    }
+    const isInsured = insuranceStatus.value === "insured";
+    insuranceFields.classList.toggle("hidden", !isInsured);
+    Array.from(insuranceFields.querySelectorAll("input")).forEach((input) => {
+      input.required = isInsured;
+    });
   };
 
-  // Call the function to set visibility on page load based on stored value
+  insuranceStatus.addEventListener("change", toggleInsuranceFields);
   toggleInsuranceFields();
 
-  // Show/Hide Insurance Fields when changing Insurance Status
-  insuranceStatus.addEventListener("change", () => {
-    toggleInsuranceFields();
-  });
-
-  // Save Patient Data
+  // Submit Form Data
   patientForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    if (!registrationNumber.value) {
-      alert("Please generate a valid registration number before saving.");
-      return;
-    }
-
+    const db = dbPromise.result;
     const patient = {
       registrationNumber: registrationNumber.value,
+      dateOfRegistration: dateOfRegistration.value,
       surname: document.getElementById("surname").value,
       otherNames: document.getElementById("other-names").value,
       sex: document.getElementById("sex").value,
@@ -122,92 +97,65 @@ document.addEventListener("DOMContentLoaded", () => {
       telephone: document.getElementById("telephone").value,
       relativeAddress: document.getElementById("relative-address").value,
       insuranceStatus: insuranceStatus.value,
-      insuranceName: document.getElementById("insurance-name").value,
-      subDistrict: document.getElementById("sub-district").value,
-      insuranceNo: document.getElementById("insurance-no").value,
-      insuranceId: document.getElementById("insurance-id").value,
     };
 
-    // If non-insured, remove insurance-related details and ensure the block is hidden
-    if (insuranceStatus.value === "non-insured") {
-      delete patient.insuranceName;
-      delete patient.subDistrict;
-      delete patient.insuranceNo;
-      delete patient.insuranceId;
+    if (insuranceStatus.value === "insured") {
+      patient.insuranceDetails = {
+        insuranceName: document.getElementById("insurance-name").value,
+        subDistrict: document.getElementById("sub-district").value,
+        insuranceNo: document.getElementById("insurance-no").value,
+        insuranceId: document.getElementById("insurance-id").value,
+      };
     }
 
-    // Check for duplicate registration numbers in IndexedDB
-    dbPromise.onsuccess = (event) => {
-      const db = event.target.result;
-      const transaction = db.transaction(['patients'], 'readonly');
-      const objectStore = transaction.objectStore('patients');
-      const request = objectStore.get(patient.registrationNumber);
+    // Check for duplicate records
+    const transaction = db.transaction(['patients'], 'readonly');
+    const store = transaction.objectStore('patients');
+    const request = store.get(patient.registrationNumber);
 
-      request.onsuccess = () => {
-        if (request.result) {
-          alert("Duplicate Registration Number! Please use a unique serial number.");
-        } else {
-          // Save the patient data if no duplicate
-          savePatientData(db, patient);
-        }
-      };
+    request.onsuccess = () => {
+      if (request.result) {
+        alert("Duplicate Registration Number. Please use a unique serial number.");
+      } else {
+        savePatientData(db, patient);
+      }
     };
   });
 
-  // Export Patients to CSV
+  // Export to CSV
   exportCsvButton.addEventListener("click", () => {
-    const facilityName = prompt("Enter Facility Name:");
-    if (!facilityName) {
-      alert("Facility name is required for export.");
-      return;
-    }
+    const db = dbPromise.result;
+    const transaction = db.transaction(['patients'], 'readonly');
+    const store = transaction.objectStore('patients');
 
-    dbPromise.onsuccess = (event) => {
-      const db = event.target.result;
-      const transaction = db.transaction(['patients'], 'readonly');
-      const objectStore = transaction.objectStore('patients');
-      const request = objectStore.getAll();
+    store.getAll().onsuccess = (event) => {
+      const patients = event.target.result;
 
-      request.onsuccess = (event) => {
-        const patients = event.target.result;
-        if (patients.length === 0) {
-          alert("No patient data available for export.");
-          return;
-        }
+      if (!patients.length) {
+        alert("No patient data available for export.");
+        return;
+      }
 
-        const headers = Object.keys(patients[0]);
-        const csvContent = [
-          headers.join(","), // Header row
-          ...patients.map((row) =>
-            headers.map((field) => JSON.stringify(row[field] || "")).join(",")
-          ),
-        ].join("\n");
+      const csvHeaders = Object.keys(patients[0]);
+      const csvRows = patients.map((p) => csvHeaders.map((key) => JSON.stringify(p[key] || "")).join(","));
+      const csvContent = [csvHeaders.join(","), ...csvRows].join("\n");
 
-        // Get the current date and time for the file name
-        const datetime = new Date().toISOString().split("T")[0] + "_" + new Date().toISOString().split("T")[1].split(".")[0];
-
-        const blob = new Blob([csvContent], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${facilityName}_patients_${datetime}.csv`;
-        a.click();
-      };
-
-      request.onerror = (event) => {
-        console.error('Error fetching patients for export:', event.target.error);
-      };
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `patients_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
     };
   });
 
-  // Reset form for new data entry after save
-  function resetForm() {
+  // Reset Form
+  const resetForm = () => {
     patientForm.reset();
-    insuranceFields.classList.add("hidden");
+    toggleInsuranceFields();
     registrationNumber.value = "";
-    toggleInsuranceFields(); // Reapply the default toggle
-  }
+  };
 
-  // Update footer year
+  // Footer Year Update
   document.getElementById("current-year").textContent = new Date().getFullYear();
 });
