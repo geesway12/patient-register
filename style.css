@@ -21,106 +21,106 @@ body {
 .header {
   background-color: #004b87;
   color: white;
-  padding: 20px 0;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .logo-container {
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
 }
 
 .logo {
-  max-width: 80px;
+  max-width: 60px;
   height: auto;
+  margin-right: 10px;
 }
 
 .facility-name {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 10px;
+  text-align: left;
 }
 
 .facility-name h1 {
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
   margin: 0;
-  color: #004b87;
+  color: white;
 }
 
 .facility-name p {
-  font-size: 18px;
+  font-size: 1rem;
   margin: 5px 0;
-  color: #004b87;
+  color: #e0f7fa;
 }
 
 /* Form Container */
 .app-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 1024px;
+  max-width: 1200px;
   margin: 20px auto;
   padding: 20px;
-  background: #f7f7f7;
+  background: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
+/* Form Styling */
 form {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   width: 100%;
 }
 
-/* Form Field Styling */
 .form-field {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .form-field label {
   font-weight: bold;
-  margin-bottom: 8px;
-  color: #555555;
-  flex: 1;
-  text-align: left;
+  color: #333333;
 }
 
 .form-field input,
-.form-field select,
-button {
-  padding: 15px;
+.form-field select {
+  padding: 10px;
   border-radius: 6px;
-  border: 1px solid #bdbdbd;
+  border: 1px solid #cccccc;
   font-size: 16px;
-  outline: none;
-  background: #f7f7f7;
-  color: #333333;
+  background: #f9f9f9;
   width: 100%;
+  transition: border-color 0.3s ease;
 }
 
+.form-field input:focus,
+.form-field select:focus {
+  border-color: #004b87;
+  outline: none;
+}
+
+/* Buttons */
 button {
-  background: #616161;
-  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 6px;
   border: none;
-  cursor: pointer;
+  font-size: 16px;
   font-weight: bold;
-  transition: background 0.5s ease;
+  background: #004b87;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-  background: #424242;
+  background: #003366;
 }
 
 button:active {
@@ -129,5 +129,49 @@ button:active {
 
 /* Insurance Block Styling */
 .insurance-block {
+  grid-column: span 2;
   background-color: #ffebeb;
-  border: 2px solid #ff4c4c; /* Red border
+  border: 2px solid #ff4c4c;
+  border-radius: 6px;
+  padding: 20px;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .facility-name {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .form-field {
+    grid-column: span 1;
+  }
+
+  .app-container {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    max-width: 40px;
+  }
+
+  .facility-name h1 {
+    font-size: 1.2rem;
+  }
+
+  .facility-name p {
+    font-size: 0.9rem;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+}
