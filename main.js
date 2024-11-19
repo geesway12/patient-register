@@ -101,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("insurance-no").required = true;
       document.getElementById("insurance-id").required = true;
     } else {
+      // Hide the insurance fields completely if non-insured
       insuranceFields.classList.add("hidden");
       document.getElementById("insurance-name").required = false;
       document.getElementById("sub-district").required = false;
@@ -151,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
       delete patient.subDistrict;
       delete patient.insuranceNo;
       delete patient.insuranceId;
-      insuranceFields.classList.add("hidden"); // Hide the insurance block
     }
 
     // Check for duplicate registration numbers in IndexedDB
