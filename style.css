@@ -14,46 +14,31 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  text-align: center;
 }
 
 /* Page Header Styling */
-.page-header {
-  background-color: #004b87;  /* Blue Background for Header, matching logo */
+.header {
+  background-color: #004b87;
   color: white;
-  padding: 20px 30px;
+  padding: 20px 0;
 }
 
-.header-container {
+.logo-container {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-.facility-name {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  margin-left: 25px;  /* Space from the edge */
+.logo {
+  max-width: 120px;
+  height: auto;
 }
 
-.facility-name h1 {
+.title-container h1 {
   font-size: 32px;
-  margin-bottom: 5px;
   font-weight: 600;
   color: white;
-}
-
-.facility-name p {
-  font-size: 20px;
-  margin: 0;
-  color: white;
-  text-transform: capitalize;  /* Sentence case */
-}
-
-.facility-logo img {
-  width: 80px;
-  height: auto;
 }
 
 /* App Container for the Form (Centered on the Page) */
@@ -61,16 +46,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%; /* Ensure the container takes full width */
-  max-width: 1024px;  /* Limit the form's max width */
-  margin: 0 auto;  /* Center the form horizontally */
+  max-width: 1024px;
+  margin: 0 auto; 
   padding: 20px;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   flex-direction: column;
   gap: 20px;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 /* Form styling */
@@ -78,7 +62,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 25px;
-  width: 100%; /* Ensure the form takes full width of the container */
+  width: 100%;
 }
 
 h1 {
@@ -110,13 +94,7 @@ button {
   outline: none;
   background: #f7f7f7;
   color: #333333;
-  width: 100%; /* Ensure form elements take full width */
-}
-
-.form-field input:focus,
-.form-field select:focus {
-  border-color: #616161;
-  box-shadow: 0 0 4px rgba(33, 33, 33, 0.3);
+  width: 100%;
 }
 
 button {
@@ -148,25 +126,8 @@ footer {
 }
 
 /* Responsive Design */
-@media (max-width: 1080px) {
-  .app-container {
-    max-width: 90%;
-    padding: 20px;
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-
-  button {
-    font-size: 15px;
-    padding: 10px;
-  }
-}
-
 @media (max-width: 768px) {
   .app-container {
-    max-width: 90%;
     padding: 15px;
   }
 
@@ -194,17 +155,5 @@ footer {
   button {
     font-size: 13px;
     padding: 8px;
-  }
-
-  .facility-name h1 {
-    font-size: 24px;
-  }
-
-  .facility-name p {
-    font-size: 16px;
-  }
-
-  .facility-logo img {
-    width: 40px;
   }
 }
