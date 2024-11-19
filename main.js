@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const patientForm = document.getElementById("patient-form");
   const exportCsvButton = document.getElementById("export-csv");
 
-  // Open or Create IndexedDB
+  // IndexedDB Initialization
   dbPromise.onsuccess = (event) => {
     console.log("IndexedDB opened successfully");
   };
@@ -29,21 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Database initialized");
   };
 
-  // Save Patient Data
-  const savePatientData = (db, patient) => {
-    const transaction = db.transaction(['patients'], 'readwrite');
-    const objectStore = transaction.objectStore('patients');
-
-    const request = objectStore.add(patient);
-    request.onsuccess = () => {
-      alert("Patient data saved successfully!");
-      resetForm();
-    };
-    request.onerror = (event) => {
-      alert("Error saving patient data: " + event.target.error);
-    };
-  };
-
   // Update Registration Number
   const updateRegistrationNumber = () => {
     const serialNumber = prompt("Enter Serial Number (max 6 digits):");
@@ -54,6 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const yearPart = new Date(dateOfRegistration.value).getFullYear().toString().slice(-2);
     registrationNumber.value = `${serialNumber}-${yearPart}`;
   };
+
+  dateOfRegistration.addEventListener("change", updateRegistrationNumber);
 
   // Auto-calculate Age
   dobInput.addEventListener("change", () => {
@@ -78,6 +65,21 @@ document.addEventListener("DOMContentLoaded", () => {
   insuranceStatus.addEventListener("change", toggleInsuranceFields);
   toggleInsuranceFields();
 
+  // Save Patient Data
+  const savePatientData = (db, patient) => {
+    const transaction = db.transaction(['patients'], 'readwrite');
+    const objectStore = transaction.objectStore('patients');
+
+    const request = objectStore.add(patient);
+    request.onsuccess = () => {
+      alert("Patient data saved successfully!");
+      resetForm();
+    };
+    request.onerror = (event) => {
+      alert("Error saving patient data: " + event.target.error);
+    };
+  };
+
   // Submit Form Data
   patientForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -97,15 +99,17 @@ document.addEventListener("DOMContentLoaded", () => {
       telephone: document.getElementById("telephone").value,
       relativeAddress: document.getElementById("relative-address").value,
       insuranceStatus: insuranceStatus.value,
-    };
-
-    if (insuranceStatus.value === "insured") {
-      patient.insuranceDetails = {
+      insuranceDetails: insuranceStatus.value === "insured" ? {
         insuranceName: document.getElementById("insurance-name").value,
         subDistrict: document.getElementById("sub-district").value,
         insuranceNo: document.getElementById("insurance-no").value,
         insuranceId: document.getElementById("insurance-id").value,
-      };
+      } : null,
+    };
+
+    if (!registrationNumber.value) {
+      alert("Please generate a valid registration number.");
+      return;
     }
 
     // Check for duplicate records
@@ -122,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   });
 
-  // Export to CSV
+  // Export Patients to CSV
   exportCsvButton.addEventListener("click", () => {
     const db = dbPromise.result;
     const transaction = db.transaction(['patients'], 'readonly');
@@ -137,7 +141,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const csvHeaders = Object.keys(patients[0]);
-      const csvRows = patients.map((p) => csvHeaders.map((key) => JSON.stringify(p[key] || "")).join(","));
+      const csvRows = patients.map((p) =>
+        csvHeaders.map((key) => JSON.stringify(p[key] || "")).join(",")
+      );
       const csvContent = [csvHeaders.join(","), ...csvRows].join("\n");
 
       const blob = new Blob([csvContent], { type: "text/csv" });
