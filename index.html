@@ -9,7 +9,7 @@
 <body>
   <div class="header">
     <div class="logo-container">
-      <img src="assets/logo.png" alt="Facility Logo" class="logo">
+      <img src="icons/logo.png" alt="Facility Logo" class="logo">
     </div>
     <div class="facility-name">
       <h1>PRESBYTERIAN HEALTH SERVICES</h1>
@@ -20,76 +20,103 @@
   <div class="app-container">
     <form id="patient-form">
       <!-- Patient Information -->
-      <label for="date-of-registration">Date of Registration</label>
-      <input type="date" id="date-of-registration" required>
+      <div class="form-field">
+        <label for="date-of-registration">Date of Registration</label>
+        <input type="date" id="date-of-registration" required>
+      </div>
 
-      <label for="registration-number">Registration Number</label>
-      <input type="text" id="registration-number" readonly>
+      <div class="form-field">
+        <label for="registration-number">Registration Number</label>
+        <input type="text" id="registration-number" readonly>
+      </div>
 
-      <label for="surname">Surname</label>
-      <input type="text" id="surname" required>
+      <div class="form-field">
+        <label for="surname">Surname</label>
+        <input type="text" id="surname" required>
+      </div>
 
-      <label for="other-names">Other Names</label>
-      <input type="text" id="other-names" required>
+      <div class="form-field">
+        <label for="other-names">Other Names</label>
+        <input type="text" id="other-names" required>
+      </div>
 
-      <label for="dob">Date of Birth</label>
-      <input type="date" id="dob" required>
+      <div class="form-field">
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" required>
+      </div>
 
-      <label for="age">Age</label>
-      <input type="number" id="age" readonly>
+      <div class="form-field">
+        <label for="age">Age</label>
+        <input type="number" id="age" readonly>
+      </div>
 
-      <!-- Sex -->
-      <label for="sex">Sex</label>
-      <select id="sex">
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-      </select>
+      <div class="form-field">
+        <label for="sex">Sex</label>
+        <select id="sex">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
 
-      <!-- Marital Status -->
-      <label for="marital-status">Marital Status</label>
-      <select id="marital-status">
-        <option value="single">Single</option>
-        <option value="married">Married</option>
-        <option value="divorced">Divorced</option>
-        <option value="widowed">Widowed</option>
-      </select>
+      <div class="form-field">
+        <label for="marital-status">Marital Status</label>
+        <select id="marital-status">
+          <option value="single">Single</option>
+          <option value="married">Married</option>
+          <option value="divorced">Divorced</option>
+          <option value="widowed">Widowed</option>
+        </select>
+      </div>
 
-      <!-- Occupation -->
-      <label for="occupation">Occupation</label>
-      <input type="text" id="occupation">
+      <div class="form-field">
+        <label for="occupation">Occupation</label>
+        <input type="text" id="occupation">
+      </div>
 
-      <!-- Religion -->
-      <label for="religion">Religion</label>
-      <input type="text" id="religion">
+      <div class="form-field">
+        <label for="religion">Religion</label>
+        <input type="text" id="religion">
+      </div>
 
-      <!-- Telephone Number -->
-      <label for="telephone">Telephone</label>
-      <input type="tel" id="telephone" pattern="^\d{10}$" placeholder="e.g. 0241234567" required>
+      <div class="form-field">
+        <label for="telephone">Telephone</label>
+        <input type="tel" id="telephone" pattern="^\d{10}$" placeholder="e.g. 0241234567" required>
+      </div>
 
-      <!-- Contact Address of Nearest Relative -->
-      <label for="relative-address">Contact Address of Nearest Relative</label>
-      <input type="text" id="relative-address">
+      <div class="form-field">
+        <label for="relative-address">Contact Address of Nearest Relative</label>
+        <input type="text" id="relative-address">
+      </div>
 
-      <!-- Insurance Status -->
-      <label for="insurance-status">Insurance Status</label>
-      <select id="insurance-status">
-        <option value="non-insured">Non-insured</option>
-        <option value="insured">Insured</option>
-      </select>
+      <div class="form-field">
+        <label for="insurance-status">Insurance Status</label>
+        <select id="insurance-status">
+          <option value="non-insured">Non-insured</option>
+          <option value="insured">Insured</option>
+        </select>
+      </div>
 
       <!-- Insurance Block -->
       <div id="insurance-fields" class="insurance-block hidden">
-        <label for="insurance-name">Insurance Name</label>
-        <input type="text" id="insurance-name">
+        <div class="form-field">
+          <label for="insurance-name">Insurance Name</label>
+          <input type="text" id="insurance-name">
+        </div>
 
-        <label for="sub-district">Sub-District</label>
-        <input type="text" id="sub-district">
+        <div class="form-field">
+          <label for="sub-district">Sub-District</label>
+          <input type="text" id="sub-district">
+        </div>
 
-        <label for="insurance-no">Insurance No.</label>
-        <input type="text" id="insurance-no">
+        <div class="form-field">
+          <label for="insurance-no">Insurance No.</label>
+          <input type="text" id="insurance-no">
+        </div>
 
-        <label for="insurance-id">Insurance Scheme ID No.</label>
-        <input type="text" id="insurance-id">
+        <div class="form-field">
+          <label for="insurance-id">Insurance Scheme ID No.</label>
+          <input type="text" id="insurance-id">
+        </div>
       </div>
 
       <button type="submit">Save</button>
