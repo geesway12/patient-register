@@ -1,4 +1,4 @@
-// Cache files and assets for offline use
+// Install event: caches app assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open('patient-register-cache').then((cache) => {
@@ -8,18 +8,39 @@ self.addEventListener('install', (event) => {
         '/style.css',
         '/main.js',
         '/manifest.json',
-        '/assets/logo.png',
-        // Add any other assets your app needs
+        '/icons/icon-192x192.png',
+        '/icons/icon-512x512.png'
       ]);
     })
   );
 });
 
-// Fetch and serve cached assets when offline
+// Fetch event: Serve cached assets or fetch from network if not cached
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
+      if (cachedResponse) {
+        return cachedResponse; // Return cached version if found
+      } else {
+        return fetch(event.request); // Fetch from network if not cached
+      }
+    })
+  );
+});
+
+// Activate event: Ensure outdated cache is removed
+self.addEventListener('activate', (event) => {
+  const cacheWhitelist = ['patient-register-cache'];
+
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (!cacheWhitelist.includes(cacheName)) {
+            return caches.delete(cacheName); // Delete old caches
+          }
+        })
+      );
     })
   );
 });
