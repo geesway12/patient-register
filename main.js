@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const dobInput = document.getElementById("dob");
   const ageInput = document.getElementById("age");
   const patientForm = document.getElementById("patient-form");
-  const exportCsvButton = document.getElementById("export-csv");
 
   // Open or create an IndexedDB database
   const dbPromise = indexedDB.open('patient-register-db', 1);
@@ -14,8 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
   dbPromise.onsuccess = (event) => {
     const db = event.target.result;
     console.log('Database opened successfully!');
-    // Fetch existing patients from IndexedDB and populate
-    fetchPatientsFromIndexedDB(db);
   };
 
   dbPromise.onerror = (event) => {
@@ -30,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
       keyPath: 'registrationNumber', // Use the registration number as the unique identifier
     });
 
-    // Create an index on the registration number (optional, but helpful for querying)
     objectStore.createIndex('registrationNumber', 'registrationNumber', { unique: true });
 
     console.log('Database and object store created successfully!');
@@ -44,27 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     request.onsuccess = () => {
       console.log('Patient data saved to IndexedDB');
+      alert("Patient saved successfully!");
+      patientForm.reset();
+      insuranceFields.classList.add("hidden");
+      registrationNumber.value = "";
     };
 
     request.onerror = (event) => {
       console.error('Error saving patient data:', event.target.error);
-    };
-  }
-
-  // Fetch patients from IndexedDB and populate the form if necessary
-  function fetchPatientsFromIndexedDB(db) {
-    const transaction = db.transaction(['patients'], 'readonly');
-    const objectStore = transaction.objectStore('patients');
-    const request = objectStore.getAll();
-
-    request.onsuccess = (event) => {
-      const patients = event.target.result;
-      console.log('Fetched patients:', patients);
-      // Optional: You could populate a table or display the list of patients
-    };
-
-    request.onerror = (event) => {
-      console.error('Error fetching patients:', event.target.error);
     };
   }
 
@@ -167,10 +150,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           // Save the patient data if no duplicate
           savePatientData(db, patient);
-          alert("Patient saved successfully!");
-          patientForm.reset();
-          insuranceFields.classList.add("hidden");
-          registrationNumber.value = "";
         }
       };
     };
