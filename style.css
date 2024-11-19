@@ -27,18 +27,36 @@ body {
 .logo-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .logo {
-  max-width: 120px;
+  max-width: 100px; /* Adjust logo size */
   height: auto;
 }
 
-.title-container h1 {
-  font-size: 32px;
+.facility-name {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+}
+
+.facility-name h1 {
+  font-size: 28px;
   font-weight: 600;
-  color: white;
+  margin: 0;
+  color: #004b87; /* Blue color for the title */
+}
+
+.facility-name p {
+  font-size: 18px;
+  margin: 5px 0;
+  color: #004b87; /* Blue color for the subtitle */
 }
 
 /* App Container for the Form (Centered on the Page) */
@@ -47,7 +65,7 @@ body {
   justify-content: center;
   align-items: center;
   max-width: 1024px;
-  margin: 0 auto; 
+  margin: 20px auto;
   padding: 20px;
   background: #ffffff;
   border-radius: 10px;
@@ -57,11 +75,10 @@ body {
   margin-top: 20px;
 }
 
-/* Form styling */
 form {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
   width: 100%;
 }
 
@@ -155,5 +172,17 @@ footer {
   button {
     font-size: 13px;
     padding: 8px;
+  }
+
+  .facility-name h1 {
+    font-size: 24px;
+  }
+
+  .facility-name p {
+    font-size: 16px;
+  }
+
+  .facility-logo img {
+    width: 40px;
   }
 }
