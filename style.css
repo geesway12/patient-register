@@ -14,7 +14,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  text-align: center;
+  text-align: left;
 }
 
 /* Page Header Styling */
@@ -106,7 +106,7 @@ button {
   padding: 12px;
   border-radius: 6px;
   border: 1px solid #bdbdbd;
-  font-size: 16px;
+  font-size: 20px;
   outline: none;
   background: #f7f7f7;
   color: #333333;
