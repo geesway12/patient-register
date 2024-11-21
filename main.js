@@ -8,68 +8,86 @@ document.addEventListener("DOMContentLoaded", () => {
   const patientForm = document.getElementById("patient-form");
   const exportCsvButton = document.getElementById("export-csv");
 
-  // Open or create an IndexedDB database
-  const dbPromise = indexedDB.open('patient-register-db', 1);
+  // Summary Elements
+  const totalRegisteredEl = document.getElementById("total-registered");
+  const totalMaleEl = document.getElementById("total-male");
+  const totalFemaleEl = document.getElementById("total-female");
+  const totalInsuredEl = document.getElementById("total-insured");
+  const totalNonInsuredEl = document.getElementById("total-non-insured");
 
-  dbPromise.onsuccess = (event) => {
-    const db = event.target.result;
-    console.log('Database opened successfully!');
-    // Fetch existing patients from IndexedDB and populate
-    fetchPatientsFromIndexedDB(db);
-  };
-
-  dbPromise.onerror = (event) => {
-    console.error('Error opening database:', event.target.error);
-  };
+  // IndexedDB Setup
+  const dbPromise = indexedDB.open("patient-register-db", 1);
 
   dbPromise.onupgradeneeded = (event) => {
     const db = event.target.result;
-
-    // Create an object store to hold patient data
-    const objectStore = db.createObjectStore('patients', {
-      keyPath: 'registrationNumber', // Use the registration number as the unique identifier
-    });
-
-    // Create an index on the registration number (optional, but helpful for querying)
-    objectStore.createIndex('registrationNumber', 'registrationNumber', { unique: true });
-
-    console.log('Database and object store created successfully!');
+    db.createObjectStore("patients", { keyPath: "registrationNumber" });
+    console.log("Database and object store created successfully!");
   };
 
-  // Save patient data to the IndexedDB database
-  function savePatientData(db, patient) {
-    const transaction = db.transaction(['patients'], 'readwrite');
-    const objectStore = transaction.objectStore('patients');
-    const request = objectStore.add(patient);  // This saves the patient data to IndexedDB
+  dbPromise.onsuccess = (event) => {
+    const db = event.target.result;
+    console.log("Database opened successfully!");
+    fetchPatientsFromIndexedDB(db); // Populate summary on load
+  };
 
-    request.onsuccess = () => {
-      console.log('Patient data saved to IndexedDB');
-    };
+  dbPromise.onerror = (event) => {
+    console.error("Error opening database:", event.target.error);
+  };
 
-    request.onerror = (event) => {
-      console.error('Error saving patient data:', event.target.error);
-    };
+  // Restrict future dates
+  const today = new Date().toISOString().split("T")[0];
+  dateOfRegistration.setAttribute("max", today);
+  dobInput.setAttribute("max", today);
+
+  // Update Patient Summary
+  function updateSummary(patients) {
+    const totalRegistered = patients.length;
+    const totalMale = patients.filter((p) => p.sex === "male").length;
+    const totalFemale = patients.filter((p) => p.sex === "female").length;
+    const totalInsured = patients.filter((p) => p.insuranceStatus === "insured").length;
+    const totalNonInsured = patients.filter((p) => p.insuranceStatus === "non-insured").length;
+
+    totalRegisteredEl.textContent = totalRegistered;
+    totalMaleEl.textContent = totalMale;
+    totalFemaleEl.textContent = totalFemale;
+    totalInsuredEl.textContent = totalInsured;
+    totalNonInsuredEl.textContent = totalNonInsured;
   }
 
-  // Fetch patients from IndexedDB and populate the form if necessary
+  // Fetch Patients from IndexedDB
   function fetchPatientsFromIndexedDB(db) {
-    const transaction = db.transaction(['patients'], 'readonly');
-    const objectStore = transaction.objectStore('patients');
+    const transaction = db.transaction(["patients"], "readonly");
+    const objectStore = transaction.objectStore("patients");
     const request = objectStore.getAll();
 
     request.onsuccess = (event) => {
       const patients = event.target.result;
-      console.log('Fetched patients:', patients);
-      // Optional: You could populate a table or display the list of patients
+      updateSummary(patients);
     };
 
     request.onerror = (event) => {
-      console.error('Error fetching patients:', event.target.error);
+      console.error("Error fetching patients:", event.target.error);
     };
   }
 
-  // Generate Registration Number dynamically
-  const updateRegistrationNumber = () => {
+  // Save Patient Data to IndexedDB
+  function savePatientData(db, patient) {
+    const transaction = db.transaction(["patients"], "readwrite");
+    const objectStore = transaction.objectStore("patients");
+    const request = objectStore.add(patient);
+
+    request.onsuccess = () => {
+      console.log("Patient data saved to IndexedDB");
+      fetchPatientsFromIndexedDB(db); // Update the summary after saving
+    };
+
+    request.onerror = (event) => {
+      console.error("Error saving patient data:", event.target.error);
+    };
+  }
+
+  // Generate Registration Number
+  function updateRegistrationNumber() {
     const serialNumber = prompt("Enter Serial Number (max 6 digits):");
     if (!serialNumber || !/^\d{1,6}$/.test(serialNumber)) {
       alert("Invalid Serial Number. Please enter up to 6 digits.");
@@ -77,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const yearPart = new Date(dateOfRegistration.value).getFullYear().toString().slice(-2);
     registrationNumber.value = `${serialNumber}-${yearPart}`;
-  };
+  }
 
   dateOfRegistration.addEventListener("change", updateRegistrationNumber);
 
@@ -86,14 +104,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dobInput.value) {
       const dob = new Date(dobInput.value);
       const today = new Date();
-      ageInput.value = today.getFullYear() - dob.getFullYear();
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
+      ageInput.value = age;
     } else {
       ageInput.value = "";
     }
   });
 
-  // Show/Hide Insurance Fields based on initial value of Insurance Status
-  const toggleInsuranceFields = () => {
+  // Show/Hide Insurance Fields
+  function toggleInsuranceFields() {
     if (insuranceStatus.value === "insured") {
       insuranceFields.classList.remove("hidden");
       document.getElementById("insurance-name").required = true;
@@ -107,15 +130,10 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("insurance-no").required = false;
       document.getElementById("insurance-id").required = false;
     }
-  };
+  }
 
-  // Call the function to set visibility on page load based on stored value
-  toggleInsuranceFields();
-
-  // Show/Hide Insurance Fields when changing Insurance Status
-  insuranceStatus.addEventListener("change", () => {
-    toggleInsuranceFields();
-  });
+  toggleInsuranceFields(); // Set visibility on page load
+  insuranceStatus.addEventListener("change", toggleInsuranceFields);
 
   // Save Patient Data
   patientForm.addEventListener("submit", (e) => {
@@ -128,48 +146,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const patient = {
       registrationNumber: registrationNumber.value,
+      dateOfRegistration: dateOfRegistration.value,
       surname: document.getElementById("surname").value,
       otherNames: document.getElementById("other-names").value,
       sex: document.getElementById("sex").value,
       dateOfBirth: dobInput.value,
       age: ageInput.value,
-      maritalStatus: document.getElementById("marital-status").value,
-      occupation: document.getElementById("occupation").value,
-      religion: document.getElementById("religion").value,
-      telephone: document.getElementById("telephone").value,
+      contactNumber: document.getElementById("contact-number").value,
+      address: document.getElementById("address").value,
+      relativeContact: document.getElementById("relative-contact").value,
       relativeAddress: document.getElementById("relative-address").value,
       insuranceStatus: insuranceStatus.value,
-      insuranceName: document.getElementById("insurance-name").value,
-      subDistrict: document.getElementById("sub-district").value,
-      insuranceNo: document.getElementById("insurance-no").value,
-      insuranceId: document.getElementById("insurance-id").value,
+      insuranceName: document.getElementById("insurance-name").value || "",
+      subDistrict: document.getElementById("sub-district").value || "",
+      insuranceNo: document.getElementById("insurance-no").value || "",
+      insuranceId: document.getElementById("insurance-id").value || "",
     };
 
-    // If non-insured, remove insurance-related details and ensure the block is hidden
-    if (insuranceStatus.value === "non-insured") {
-      delete patient.insuranceName;
-      delete patient.subDistrict;
-      delete patient.insuranceNo;
-      delete patient.insuranceId;
-      insuranceFields.classList.add("hidden"); // Hide the insurance block
-    }
-
-    // Check for duplicate registration numbers in IndexedDB
     dbPromise.onsuccess = (event) => {
       const db = event.target.result;
-      const transaction = db.transaction(['patients'], 'readonly');
-      const objectStore = transaction.objectStore('patients');
+      const transaction = db.transaction(["patients"], "readonly");
+      const objectStore = transaction.objectStore("patients");
       const request = objectStore.get(patient.registrationNumber);
 
       request.onsuccess = () => {
         if (request.result) {
           alert("Duplicate Registration Number! Please use a unique serial number.");
         } else {
-          // Save the patient data if no duplicate
           savePatientData(db, patient);
           alert("Patient saved successfully!");
           patientForm.reset();
-          insuranceFields.classList.add("hidden");
+          toggleInsuranceFields(); // Reset insurance block visibility
           registrationNumber.value = "";
         }
       };
@@ -186,8 +193,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     dbPromise.onsuccess = (event) => {
       const db = event.target.result;
-      const transaction = db.transaction(['patients'], 'readonly');
-      const objectStore = transaction.objectStore('patients');
+      const transaction = db.transaction(["patients"], "readonly");
+      const objectStore = transaction.objectStore("patients");
       const request = objectStore.getAll();
 
       request.onsuccess = (event) => {
@@ -205,9 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ),
         ].join("\n");
 
-        // Get the current date and time for the file name
-        const datetime = new Date().toISOString().split("T")[0] + "_" + new Date().toISOString().split("T")[1].split(".")[0];
-
+        const datetime = new Date().toISOString().replace(/T/, "_").replace(/:/g, "-").split(".")[0];
         const blob = new Blob([csvContent], { type: "text/csv" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -215,13 +220,17 @@ document.addEventListener("DOMContentLoaded", () => {
         a.download = `${facilityName}_patients_${datetime}.csv`;
         a.click();
       };
-
-      request.onerror = (event) => {
-        console.error('Error fetching patients for export:', event.target.error);
-      };
     };
   });
 
-  // Update footer year
+  // Register Service Worker
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then(() => console.log("Service Worker Registered"))
+      .catch((error) => console.error("Service Worker Registration Failed:", error));
+  }
+
+  // Update Footer Year
   document.getElementById("current-year").textContent = new Date().getFullYear();
 });

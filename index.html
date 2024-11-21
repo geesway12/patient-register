@@ -3,156 +3,174 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
   <title>Patient Register</title>
 </head>
 <body>
-  <!-- Custom Header for Facility Name and Logo -->
-  <header class="page-header">
-    <div class="header-container">
-         <!-- Facility Logo -->
-      <div class="facility-logo">
-        <img src="assets/logo.png" alt="Facility Logo" />
+  <!-- Header -->
+  <header class="bg-primary text-white py-3">
+    <div class="container d-flex align-items-center justify-content-between">
+      <div>
+        <img src="./assets/logo.png" alt="Presbyterian Logo" class="img-fluid" style="max-height: 50px;">
       </div>
-      
-      <!-- Facility Name -->
-      <div class="facility-name">
-        <h1>PRESBYTERIAN HEALTH SERVICES</h1>
-        <p>Presbyterian Health Centre Kwahu Praso</p>
+      <div>
+        <h1 class="h4 mb-0">PRESBYTERIAN HEALTH SERVICES</h1>
+        <p class="mb-0">Presbyterian Health Centre, Kwahu Praso</p>
       </div>
-     
     </div>
   </header>
 
-  <div class="app-container">
-    <h1>Patient Register</h1>
-    <form id="patient-form">
-      <!-- Date of Registration -->
-      <div class="form-field">
-        <label for="date-of-registration">Date of Registration:</label>
-        <input type="date" id="date-of-registration" required>
-      </div>
-
-      <!-- Registration Number -->
-      <div class="form-field">
-        <label for="registration-number">Registration Number:</label>
-        <input type="text" id="registration-number" readonly>
-      </div>
-
-      <!-- Insurance Status -->
-      <div class="form-field">
-        <label for="insurance-status">Insurance Status:</label>
-        <select id="insurance-status" required>
-          <option value="" disabled selected>-- Select --</option>
-          <option value="non-insured">Non-Insured</option>
-          <option value="insured">Insured</option>
-        </select>
-      </div>
-
-      <!-- Surname -->
-      <div class="form-field">
-        <label for="surname">Surname / Family Name:</label>
-        <input type="text" id="surname" required>
-      </div>
-
-      <!-- Other Names -->
-      <div class="form-field">
-        <label for="other-names">Other Names:</label>
-        <input type="text" id="other-names" required>
-      </div>
-
-      <!-- Sex -->
-      <div class="form-field">
-        <label for="sex">Sex:</label>
-        <select id="sex" required>
-          <option value="" disabled selected>-- Select --</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
-      </div>
-
-      <!-- Date of Birth -->
-      <div class="form-field">
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" required>
-      </div>
-
-      <!-- Age -->
-      <div class="form-field">
-        <label for="age">Age:</label>
-        <input type="text" id="age" readonly>
-      </div>
-
-      <!-- Marital Status -->
-      <div class="form-field">
-        <label for="marital-status">Marital Status:</label>
-        <select id="marital-status" required>
-          <option value="" disabled selected>-- Select --</option>
-          <option value="single">Single</option>
-          <option value="married">Married</option>
-          <option value="divorced">Divorced</option>
-          <option value="widowed">Widowed</option>
-        </select>
-      </div>
-
-      <!-- Occupation -->
-      <div class="form-field">
-        <label for="occupation">Occupation:</label>
-        <input type="text" id="occupation" required>
-      </div>
-
-      <!-- Religion -->
-      <div class="form-field">
-        <label for="religion">Religion:</label>
-        <input type="text" id="religion">
-      </div>
-
-      <!-- Telephone -->
-      <div class="form-field">
-        <label for="telephone">Telephone (10 digits, e.g., 0243445566):</label>
-        <input type="text" id="telephone" maxlength="10" pattern="0[0-9]{9}" title="Must start with 0 and have 10 digits (e.g., 0243445566)" required>
-      </div>
-
-      <!-- Address of Nearest Relative -->
-      <div class="form-field">
-        <label for="relative-address">Contact Address of Nearest Relative:</label>
-        <input type="text" id="relative-address">
-      </div>
-
-      <!-- Insurance Details (Hidden by Default) -->
-      <div id="insurance-fields" class="hidden">
-        <h3>Insurance Details</h3>
-        <div class="form-field">
-          <label for="insurance-name">Name of Health Insurance Scheme:</label>
-          <input type="text" id="insurance-name">
+  <!-- Main Content -->
+  <main class="container mt-5">
+    <!-- Summary Section -->
+    <div id="summary-section" class="card shadow p-4 mb-4">
+      <h5 class="card-title">Patient Summary</h5>
+      <div class="d-flex flex-wrap justify-content-between">
+        <div class="summary-item">
+          <strong>Total Registered:</strong> <span id="total-registered">0</span>
         </div>
-        <div class="form-field">
-          <label for="sub-district">Sub-District of Locality:</label>
-          <input type="text" id="sub-district">
+        <div class="summary-item">
+          <strong>Total Male:</strong> <span id="total-male">0</span>
         </div>
-        <div class="form-field">
-          <label for="insurance-no">Health Insurance Number:</label>
-          <input type="text" id="insurance-no">
+        <div class="summary-item">
+          <strong>Total Female:</strong> <span id="total-female">0</span>
         </div>
-        <div class="form-field">
-          <label for="insurance-id">Health Insurance Scheme ID No.:</label>
-          <input type="text" id="insurance-id">
+        <div class="summary-item">
+          <strong>Total Insured:</strong> <span id="total-insured">0</span>
+        </div>
+        <div class="summary-item">
+          <strong>Total Non-Insured:</strong> <span id="total-non-insured">0</span>
         </div>
       </div>
+    </div>
 
-      <!-- Buttons -->
-      <button type="submit">Save Patient</button>
-      <button type="button" id="export-csv">Export Patients to CSV</button>
-    </form>
-  </div>
+    <!-- Form Section -->
+    <div class="card shadow p-4">
+      <h1 class="h5 mb-3 text-center">Patient Register</h1>
+      <form id="patient-form" novalidate>
+        <!-- Registration Block -->
+        <div class="form-block border-blue">
+          <h5 class="block-title">Registration Details</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="date-of-registration" class="form-label">Date of Registration:</label>
+              <input type="date" id="date-of-registration" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="registration-number" class="form-label">Registration Number:</label>
+              <input type="text" id="registration-number" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+              <label for="insurance-status" class="form-label">Insurance Status:</label>
+              <select id="insurance-status" class="form-select" required>
+                <option value="" disabled selected>-- Select --</option>
+                <option value="non-insured">Non-Insured</option>
+                <option value="insured">Insured</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
+        <!-- Personal Details Block -->
+        <div class="form-block border-blue">
+          <h5 class="block-title">Personal Details</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="surname" class="form-label">Surname:</label>
+              <input type="text" id="surname" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="other-names" class="form-label">Other Names:</label>
+              <input type="text" id="other-names" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="sex" class="form-label">Sex:</label>
+              <select id="sex" class="form-select" required>
+                <option value="" disabled selected>-- Select --</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="dob" class="form-label">Date of Birth:</label>
+              <input type="date" id="dob" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="age" class="form-label">Age:</label>
+              <input type="text" id="age" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+              <label for="contact-number" class="form-label">Contact Number:</label>
+              <input type="text" id="contact-number" class="form-control" pattern="0[0-9]{9}" maxlength="10" placeholder="e.g., 0243445566" required>
+            </div>
+            <div class="col-md-12">
+              <label for="address" class="form-label">Address of Patient:</label>
+              <textarea id="address" class="form-control" rows="3" placeholder="Enter full address" required></textarea>
+            </div>
+          </div>
+        </div>
 
+        <!-- Nearest Relative Details -->
+        <div class="form-block border-blue">
+          <h5 class="block-title">Nearest Relative Details</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="relative-contact" class="form-label">Relative's Contact:</label>
+              <input type="text" id="relative-contact" class="form-control" pattern="0[0-9]{9}" maxlength="10" placeholder="e.g., 0243445566" required>
+            </div>
+            <div class="col-md-12">
+              <label for="relative-address" class="form-label">Address of Nearest Relative:</label>
+              <textarea id="relative-address" class="form-control" rows="3" placeholder="Enter relative's full address" required></textarea>
+            </div>
+          </div>
+        </div>
 
-  <footer>
-    &copy; <span id="current-year"></span> gs-digital solutions [0269609634] All rights reserved.
+        <!-- Insurance Details Block -->
+        <div id="insurance-fields" class="form-block border-red hidden">
+          <h5 class="block-title">Insurance Details</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="insurance-name" class="form-label">Insurance Name:</label>
+              <input type="text" id="insurance-name" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label for="sub-district" class="form-label">Sub-District:</label>
+              <input type="text" id="sub-district" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label for="insurance-no" class="form-label">Insurance Number:</label>
+              <input type="text" id="insurance-no" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label for="insurance-id" class="form-label">Scheme ID:</label>
+              <input type="text" id="insurance-id" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+          <button type="submit" class="btn btn-primary">Save Patient</button>
+          <button type="button" id="export-csv" class="btn btn-success">Export to CSV</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+    <p class="mb-0">&copy; <span id="current-year"></span> GS-Digital Solutions | 0269609634 | All rights reserved.</p>
   </footer>
 
+  <!-- Register Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/service-worker.js")
+        .then(() => console.log("Service Worker Registered"))
+        .catch((error) => console.error("Service Worker Registration Failed:", error));
+    }
+  </script>
   <script src="main.js"></script>
 </body>
 </html>
